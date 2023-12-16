@@ -59,3 +59,33 @@ def test_univariate_model(
     print(f"Error for feature number {feature} ({features[feature]}): {error}")
 
     return error
+
+
+def fit_bivariate_gaussian(
+        x: np.ndarray,
+        feature_indices: list) -> tuple:
+    mu = np.mean(x[:, feature_indices], axis=0)
+    covar = np.cov(x[:, feature_indices], rowvar=0, bias=1)
+    return mu, covar
+
+
+def fit_bivariate_generative_model(
+        x: np.ndarray,
+        y: np.ndarray,
+        feature_indices: list,
+        labels: list) -> tuple:
+    
+    k = len(labels) # Number of classes
+    d = len(feature_indices) # Number of features
+    
+    mu = np.zeros((k, d)) # List of means
+    covar = np.zeros((k, d, d)) # List of covariance matrices
+    pi = np.zeros(k) # List of class weights
+    
+    for label in labels:
+        indices = (y == label)
+        mu[label - 1, :], covar[label - 1, :, :] = fit_bivariate_gaussian(x[indices, :], feature_indices)
+        pi[label - 1] = float(sum(indices)) / float(len(y))
+    
+    return mu, covar, pi
+
