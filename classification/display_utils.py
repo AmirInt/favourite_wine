@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import norm, multivariate_normal
-from classification.generative_model_utils import get_normal_dist, fit_univariate_generative_model
+from classification.generative_model_utils import get_univariate_normal_dist, fit_univariate_generative_model
 
 
 
@@ -15,7 +15,7 @@ def display_univariate_plot(
 
     plt.hist(datax[datay == label, feature], density=True)
 
-    mu, var, _ = get_normal_dist(datax, datay, label, feature)
+    mu, var, _ = get_univariate_normal_dist(datax, datay, label, feature)
 
     std = np.sqrt(var)
 
