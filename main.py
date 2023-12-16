@@ -2,7 +2,7 @@ import sys
 import numpy as np
 from classification.config_utils import load_config
 from classification.dataset_utils import Dataset
-from classification.display_utils import display_univariate_plot
+from classification.display_utils import display_univariate_plot, show_univariate_densities
 from classification.generative_model_utils import get_normal_dist
 
 
@@ -41,6 +41,31 @@ def compare_feature_stds() -> None:
             features)
 
 
+def compare_label_dists() -> None:
+    config = load_config()
+
+    dataset = Dataset(
+        config["dataset"]["path"],
+        config["dataset"]["train_count"],
+        config["dataset"]["features"],
+        config["dataset"]["labels"])
+    
+    dataset.prepare_dataset()
+
+    labels = dataset.get_labels()
+    features = dataset.get_features()
+
+    for feature, _ in enumerate(features):
+        show_univariate_densities(
+            dataset.get_trainx(),
+            dataset.get_trainy(),
+            feature,
+            labels,
+            features)
+
+
 if __name__ == "__main__":
     if sys.argv[1] == "compare_feature_stds":
         compare_feature_stds()
+    elif sys.argv[1] == "compare_label_dists":
+        compare_label_dists()

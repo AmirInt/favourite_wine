@@ -29,6 +29,6 @@ def fit_univariate_generative_model(
 
     for label in labels:
         indices = (y == label)
-        mu[label - 1], var[label - 1], pi[label - 1] = get_normal_dist(datax, datay, feature, label)
+        mu[label - 1], var[label - 1], pi[label - 1] = get_normal_dist(x, y, label, feature)
 
     return mu, var, pi
