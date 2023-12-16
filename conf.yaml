@@ -1,0 +1,21 @@
+dataset:
+  labels:
+    - 1
+    - 2
+    - 3
+  features:
+    - Alcohol
+    - Malic acid
+    - Ash
+    - Alcalinity of ash
+    - Magnesium
+    - Total phenols
+    - Flavanoids
+    - Nonflavanoid phenols
+    - Proanthocyanins
+    - Color intensity
+    - Hue
+    - OD280/OD315 of diluted wines
+    - Proline
+
+preprocess_method: univariate # univariate, bivariate
