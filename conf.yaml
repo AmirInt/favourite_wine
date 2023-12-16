@@ -17,5 +17,7 @@ dataset:
     - Hue
     - OD280/OD315 of diluted wines
     - Proline
+  path: data/wine.data.txt
+  train_count: 130
 
 preprocess_method: univariate # univariate, bivariate
