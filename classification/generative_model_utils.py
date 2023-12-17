@@ -42,8 +42,8 @@ def test_univariate_model(
         x: np.ndarray,
         y: np.ndarray,
         feature: int,
-        features: list,
-        labels: list) -> float:
+        labels: list,
+        features: list) -> float:
     
     scores = np.zeros((len(x), len(labels)))
     
@@ -89,3 +89,38 @@ def fit_bivariate_generative_model(
     
     return mu, covar, pi
 
+
+def test_bivariate_model(
+        mu: float,
+        covar: float,
+        pi: float,
+        x: np.ndarray,
+        y: np.ndarray,
+        f1: int,
+        f2: int,
+        labels: list,
+        features: list) -> float:
+    
+    if f1 == f2:
+        print("Choose different features for f1 and f2.")
+        return
+    
+    feature_indices= [f1, f2]
+    
+    k = len(labels) # Labels 1,2,...,k
+    nt = len(y) # Number of test points
+    scores = np.zeros((nt, k))
+
+    for i in range(nt):
+        for label in labels:
+            scores[i, label - 1] = np.log(pi[label - 1]) + \
+                multivariate_normal.logpdf(x[i, feature_indices], mean=mu[label - 1, :], cov=covar[label - 1, :, :])
+    
+    predictions = np.argmax(scores, axis=1) + 1
+    
+    error = np.sum(predictions != y) / len(y)
+    
+    print(f"Test error using feature combination {f1} ({features[f1]}) and {f2} ({features[f2]}): {error}")
+    print()
+
+    return error

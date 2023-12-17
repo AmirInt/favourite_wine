@@ -140,7 +140,9 @@ def plot_bivariate_classes(
         f2: int,
         labels: list,
         features: list) -> None:
-
+    """
+    Displays the points and contours of all classes together based on the given features
+    """
     if f1 == f2: # we need f1 != f2
         print("Choose different features for f1 and f2.")
         return
