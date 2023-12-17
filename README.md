@@ -35,26 +35,27 @@ Then the prediction is made by comparing the value of *probability of class i* t
 The formulae are as follows:
 - Univariate:
 
-<div class="formula">
-<img src="./assets/univariate_formula.png"></img>
-</div>
-
-- Bivariate:
-
-<div class="formula">
-<img src="./assets/bivariate_formula.png"></img>
-</div>
-
-<style>
-        .formula {
+<div class="formula" style="
                 background-color: white;
                 padding: 15px;
                 border-style: solid;
                 border-color: gray;
                 border-width: 5px;
-                border-radius: 10px;
-        }
-</style>
+                border-radius: 10px;">
+<img src="./assets/univariate_formula.png"></img>
+</div>
+
+- Bivariate:
+
+<div class="formula" style="
+                background-color: white;
+                padding: 15px;
+                border-style: solid;
+                border-color: gray;
+                border-width: 5px;
+                border-radius: 10px;">
+<img src="./assets/bivariate_formula.png"></img>
+</div>
 
 ## Dependencies
 
