@@ -1,4 +1,4 @@
-# neighbourhood_watch
+# favourite_wine
 
 ## Introduction
 
@@ -35,10 +35,26 @@ Then the prediction is made by comparing the value of *probability of class i* t
 The formulae are as follows:
 - Univariate:
 
-![](./assets/univariate_formula.png)
+<div class="formula">
+<img src="./assets/univariate_formula.png"></img>
+</div>
+
 - Bivariate:
 
-![](./assets/bivariate_formula.png)
+<div class="formula">
+<img src="./assets/bivariate_formula.png"></img>
+</div>
+
+<style>
+        .formula {
+                background-color: white;
+                padding: 15px;
+                border-style: solid;
+                border-color: gray;
+                border-width: 5px;
+                border-radius: 10px;
+        }
+</style>
 
 ## Dependencies
 
@@ -55,12 +71,15 @@ To run the project, configure the `conf.yaml` with data about the preprocessing 
 Minimum train error and the corresponding test error are respectively 0.2076923076923077 0.16666666666666666, that belongs to feature 6 (Flavanoids).
 
 As an example, the histogram and the normal distribution of this feature for the three classes are:
+
 ![](./assets/winery1_uni_feature.png)
 ![](./assets/winery2_uni_feature.png)
 ![](./assets/winery3_uni_feature.png)
 
 The amount of separation of the distributions of the classes for this feature are as follows:
+
 ![](./assets/winery_label_uni_dists_flavanoids.png)
+
 Which separates the classes quite better relative to other features.
 
 ### Bivariate:
@@ -103,9 +122,11 @@ Test errors:
 Minimum train error and the corresponding test error are respectively 0.069 and 0.083, that belong to the feature combination (0, 6) (Alcohol, Flavanoids)
 
 Also the decision boundary for the above feature combination turns out to be:
+
 ![](./assets/winery_decision_boundary_features_0_6.png)
 
 The distribution separation for the three classes based on this selected feature combination is depicted in the following figure.
+
 ![](./assets/winery_data_separation_by_features_0_6.png)
 
 Conversely, the minimum test error and the corresponding train error are respectively 0.062 and 0.077, that belong to the feature combination (6, 9) (Flavanoids, Color intensity). But, since we only derive the model from train data, this is not a valid choice.
