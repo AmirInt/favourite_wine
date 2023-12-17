@@ -185,3 +185,66 @@ def plot_bivariate_classes(
     plt.ylabel(features[f2], fontsize=14, color='red')
     plt.title('Wine Data', fontsize=14, color='blue')
     plt.show()
+
+
+def show_bivariate_decision_boundary(
+        datax: np.ndarray,
+        datay: np.ndarray,
+        f1: int,
+        f2: int,
+        labels: list,
+        features: list):
+
+    if (f1 == f2):
+      print("Select different features")
+      return
+    
+    # Fit Gaussian to each class
+    mu, covar, pi = gmutils.fit_bivariate_generative_model(
+        datax,
+        datay,
+        [f1, f2],
+        labels)
+
+    # Set up dimensions of plot
+    x1_lower, x1_upper = find_range(datax[:,f1])
+    x2_lower, x2_upper = find_range(datax[:,f2])
+    plt.xlim([x1_lower,x1_upper])
+    plt.ylim([x2_lower,x2_upper])
+
+    # Plot points in training set
+    colours = ['r', 'k', 'g']
+    for label in labels:
+        plt.plot(
+            datax[datay == label, f1],
+            datax[datay == label, f2],
+            marker='o',
+            ls='None',
+            c=colours[label - 1])
+
+    # Define a dense grid; every point in the grid will be classified according to the generative model
+    res = 200
+    x1g = np.linspace(x1_lower, x1_upper, res)
+    x2g = np.linspace(x2_lower, x2_upper, res)
+
+    # Declare random variables corresponding to each class density
+    random_vars = {}
+    for label in labels:
+        random_vars[label - 1] = multivariate_normal(mean=mu[label - 1, :],cov=covar[label - 1, :, :])
+
+    # Classify every point in the grid; these are stored in an array Z[]
+    Z = np.zeros((len(x1g), len(x2g)))
+    for i in range(0, len(x1g)):
+        for j in range(0, len(x2g)):
+            scores = []
+            for label in labels:
+                scores.append(np.log(pi[label - 1]) + random_vars[label - 1].logpdf([x1g[i], x2g[j]]))
+            Z[i, j] = np.argmax(scores) + 1
+
+    # Plot the contour lines
+    plt.contour(x1g, x2g, Z.T, 3, cmap='seismic')
+
+    # Finally, show the image
+    plt.xlabel(features[f1], fontsize=14, color='red')
+    plt.ylabel(features[f2], fontsize=14, color='red')
+    plt.show()

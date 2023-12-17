@@ -183,6 +183,21 @@ def compare_bivariate_feature_classifications() -> None:
     print(f"Minimum test error and the corresponding train error are respectively {test_errors[optimum_feature_combination]:0.3f} and {train_errors[optimum_feature_combination]:0.3f}, that belong to the feature combination {optimum_feature_combination} ({features[optimum_feature_combination[0]]}, {features[optimum_feature_combination[1]]})")
 
 
+def draw_bivariate_decision_boundary(f1: int, f2: int):
+    dataset = load_dataset()
+
+    labels = dataset.get_labels()
+    features = dataset.get_features()
+
+    dutils.show_bivariate_decision_boundary(
+        dataset.get_trainx(),
+        dataset.get_trainy(),
+        f1,
+        f2,
+        labels,
+        features)
+
+
 if __name__ == "__main__":
     try:
         if sys.argv[1] == "compare_uni_feature_stds":
@@ -195,6 +210,8 @@ if __name__ == "__main__":
             compare_bivariate_label_dists(int(sys.argv[2]), int(sys.argv[3]))
         elif sys.argv[1] == "compare_bivariate_feature_classifications":
             compare_bivariate_feature_classifications()
+        elif sys.argv[1] == "draw_bivariate_decision_boundary":
+            draw_bivariate_decision_boundary(int(sys.argv[2]), int(sys.argv[3]))
         else:
             raise IndexError
     except IndexError:
@@ -209,6 +226,8 @@ if __name__ == "__main__":
         print("- compare_bivariate_features [feature_#_1] [feature_#_2] (Compare the guassian distributions of classes for the given feature combination in the bivariate schema)")
         print()
         print("- compare_bivariate_feature_classifications (Fit models on data based on all feature combinations and compare the train and test errors in the bivariate schema)")
+        print()
+        print("- draw_bivariate_decision_boundary [feature_#_1] [feature_#_2] (Display the decision boundary derived from the train data based on the given feature numbersin the bivariate schema)")
 
     except KeyboardInterrupt:
         print("User interrupted, exiting...")
