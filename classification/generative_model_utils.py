@@ -36,9 +36,9 @@ def fit_univariate_generative_model(
 
 
 def test_univariate_model(
-        mu: float,
-        var: float,
-        pi: float,
+        mu: np.ndarray,
+        var: np.ndarray,
+        pi: np.ndarray,
         x: np.ndarray,
         y: np.ndarray,
         feature: int,
@@ -91,9 +91,9 @@ def fit_bivariate_generative_model(
 
 
 def test_bivariate_model(
-        mu: float,
-        covar: float,
-        pi: float,
+        mu: np.ndarray,
+        covar: np.ndarray,
+        pi: np.ndarray,
         x: np.ndarray,
         y: np.ndarray,
         f1: int,
