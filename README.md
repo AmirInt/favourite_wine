@@ -57,6 +57,18 @@ The formulae are as follows:
 <img src="./assets/bivariate_formula.png"></img>
 </div>
 
+- Multivariate:
+
+<div class="formula" style="
+                background-color: white;
+                padding: 15px;
+                border-style: solid;
+                border-color: gray;
+                border-width: 5px;
+                border-radius: 10px;">
+<img src="./assets/multivariate_formula.png"></img>
+</div>
+
 ## Dependencies
 
 This project uses Python 3.10.12 to run and for a list of requirements consult the requirements.txt list.
@@ -84,6 +96,7 @@ The amount of separation of the distributions of the classes for this feature ar
 Which separates the classes quite better relative to other features.
 
 ### Bivariate:
+
 Train errors:
 
 |Features|       0|       1|       2|       3|       4|       5|       6|       7|       8|       9|       10|      11|      12|
@@ -131,3 +144,11 @@ The distribution separation for the three classes based on this selected feature
 ![](./assets/winery_data_separation_by_features_0_6.png)
 
 Conversely, the minimum test error and the corresponding train error are respectively 0.062 and 0.077, that belong to the feature combination (6, 9) (Flavanoids, Color intensity). But, since we only derive the model from train data, this is not a valid choice.
+
+### Multivariate:
+
+We finally, involve all 13 features to perform the classification and this time we have achieved the following train and test errors:
+
+Train error using all features: 0.015384615384615385
+
+Test error using all features: 0.041666666666666664
