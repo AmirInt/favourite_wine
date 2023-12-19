@@ -124,3 +124,50 @@ def test_bivariate_model(
     print()
 
     return error
+
+
+def fit_multivariate_generative_model(
+        x: np.ndarray,
+        y: np.ndarray,
+        labels: list) -> tuple:
+    
+    k = len(labels) # Number of classes
+    d = x.shape[1] # Number of features
+    
+    mu = np.zeros((k, d)) # List of means
+    sigma = np.zeros((k, d, d)) # List of covariance matrices
+    pi = np.zeros(k) # List of class weights
+    
+    for label in labels:
+        indices = (y == label)
+        pi[label - 1] = float(sum(indices)) / float(len(y))
+        mu[label - 1] = np.mean(x[indices, :], axis=0)
+        sigma[label - 1] = np.cov(x[indices, :], rowvar=0, bias=1)
+    
+    return mu, sigma, pi
+
+
+def test_multivariate_model(
+        mu: np.ndarray,
+        sigma: np.ndarray,
+        pi: np.ndarray,
+        x: np.ndarray,
+        y: np.ndarray,
+        feature_indices: list,
+        labels: list,
+        features: list) -> float:
+    
+    k = len(labels) # Labels 1,2,...,k
+    nt = len(y) # Number of test points
+    scores = np.zeros((nt, k))
+    
+    for i in range(nt):
+        for label in labels:
+            scores[i, label - 1] = np.log(pi[label - 1]) + \
+                multivariate_normal.logpdf(x[i, feature_indices], mean=mu[label - 1, feature_indices], cov=sigma[label - 1, feature_indices, feature_indices])
+    
+    predictions = np.argmax(scores, axis=1) + 1
+    
+    error = np.sum(predictions != y) / len(y)
+    
+    return error

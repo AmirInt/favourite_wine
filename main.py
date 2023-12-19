@@ -198,6 +198,45 @@ def draw_bivariate_decision_boundary(f1: int, f2: int):
         features)
 
 
+def run_multivariate_model_on_features(feature_indices: list) -> None:
+
+    dataset = load_dataset()
+
+    labels = dataset.get_labels()
+    features = dataset.get_features()
+
+    train_errors = np.ones((len(features), len(features)))
+    test_errors = np.ones((len(features), len(features)))
+
+    mu, sigma, pi = gmutils.fit_multivariate_generative_model(
+        dataset.get_trainx(),
+        dataset.get_trainy(),
+        labels)
+    
+    if len(feature_indices) == 0:
+        feature_indices = range(len(features))
+
+    train_error = gmutils.test_multivariate_model(
+        mu, sigma, pi,
+        dataset.get_trainx(),
+        dataset.get_trainy(),
+        feature_indices,
+        labels,
+        features)
+
+    print(f"Train error using features {feature_indices}: {train_error}")
+
+    test_error = gmutils.test_multivariate_model(
+        mu, sigma, pi,
+        dataset.get_testx(),
+        dataset.get_testy(),
+        feature_indices,
+        labels,
+        features)
+
+    print(f"Test error using features {feature_indices}: {test_error}")
+
+
 if __name__ == "__main__":
     try:
         if sys.argv[1] == "compare_uni_feature_stds":
@@ -212,6 +251,12 @@ if __name__ == "__main__":
             compare_bivariate_feature_classifications()
         elif sys.argv[1] == "draw_bivariate_decision_boundary":
             draw_bivariate_decision_boundary(int(sys.argv[2]), int(sys.argv[3]))
+        elif sys.argv[1] == "run_multivariate_model_on_features":
+            if sys.argv[2] == "all":
+                run_multivariate_model_on_features([])
+            else:
+                feature_indices = [int(sys.argv[i]) for i in range(2, len(sys.argv))]
+                run_multivariate_model_on_features(feature_indices)
         else:
             raise IndexError
     except IndexError:
@@ -228,6 +273,8 @@ if __name__ == "__main__":
         print("- compare_bivariate_feature_classifications (Fit models on data based on all feature combinations and compare the train and test errors in the bivariate schema)")
         print()
         print("- draw_bivariate_decision_boundary [feature_#_1] [feature_#_2] (Display the decision boundary derived from the train data based on the given feature numbersin the bivariate schema)")
+        print()
+        print("- run_multivariate_model_on_features <all>/< [feature_#_1] [feature_#_2] ... > (Fit a model on data based on all features and report the train and test errors in the multivariate schema)")
 
     except KeyboardInterrupt:
         print("User interrupted, exiting...")
