@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The second week's programming assignment for the UCSanDiego online course is centred around the generative models and classifiers.
+The second and third week's programming assignment for the UCSanDiego online course is centred around the generative models and classifiers.
 
 The project includes the univariate and bivariate models.
 
