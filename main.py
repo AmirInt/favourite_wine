@@ -1,4 +1,5 @@
 import sys
+import gzip
 import numpy as np
 import classification.display_utils as dutils
 import classification.generative_model_utils as gmutils
@@ -20,6 +21,24 @@ def load_dataset() -> Dataset:
     dataset.prepare_dataset()
 
     return dataset
+
+
+def load_mnist_dataset() -> tuple:
+    with gzip.open("data/train-images-idx3-ubyte.gz", 'rb') as f:
+        trainx = np.frombuffer(f.read(), np.uint8, offset=16)
+    trainx = trainx.reshape(-1, 784)
+
+    with gzip.open("data/train-labels-idx1-ubyte.gz", 'rb') as f:
+        trainy = np.frombuffer(f.read(), np.uint8, offset=8)    
+    
+    with gzip.open("data/t10k-images-idx3-ubyte.gz", 'rb') as f:
+        testx = np.frombuffer(f.read(), np.uint8, offset=16)
+    testx = testx.reshape(-1, 784)
+
+    with gzip.open("data/t10k-labels-idx1-ubyte.gz", 'rb') as f:
+        testy = np.frombuffer(f.read(), np.uint8, offset=8)    
+    
+    return trainx, trainy, testx, testy
 
 
 def compare_uni_feature_stds() -> None:
@@ -205,9 +224,6 @@ def run_multivariate_model_on_features(feature_indices: list) -> None:
     labels = dataset.get_labels()
     features = dataset.get_features()
 
-    train_errors = np.ones((len(features), len(features)))
-    test_errors = np.ones((len(features), len(features)))
-
     mu, sigma, pi = gmutils.fit_multivariate_generative_model(
         dataset.get_trainx(),
         dataset.get_trainy(),
@@ -221,8 +237,7 @@ def run_multivariate_model_on_features(feature_indices: list) -> None:
         dataset.get_trainx(),
         dataset.get_trainy(),
         feature_indices,
-        labels,
-        features)
+        labels)
 
     print(f"Train error using features {feature_indices}: {train_error}")
 
@@ -231,8 +246,48 @@ def run_multivariate_model_on_features(feature_indices: list) -> None:
         dataset.get_testx(),
         dataset.get_testy(),
         feature_indices,
-        labels,
-        features)
+        labels)
+
+    print(f"Test error using features {feature_indices}: {test_error}")
+
+
+def classify_mnist(c: float) -> None:
+
+    trainx, trainy, testx, testy = load_mnist_dataset()
+    
+    labels = [i for i in range(10)]
+    feature_indices = [i for i in range(trainx.shape[1])]
+
+    print("Fitting model...")
+    
+    mu, sigma, pi = gmutils.fit_multivariate_generative_model(
+        trainx,
+        trainy,
+        labels)
+
+    print("Regularising the covariance matrix...")
+
+    sigma = gmutils.regularise_matrix(sigma, c, len(labels), len(feature_indices))
+    
+    print("Calculating the train error...")
+
+    train_error = gmutils.test_multivariate_model(
+        mu, sigma, pi,
+        trainx,
+        trainy,
+        feature_indices,
+        labels)
+
+    print(f"Train error using features {feature_indices}: {train_error}")
+
+    print("Calculating the test error...")
+
+    test_error = gmutils.test_multivariate_model(
+        mu, sigma, pi,
+        testx,
+        testy,
+        feature_indices,
+        labels)
 
     print(f"Test error using features {feature_indices}: {test_error}")
 
@@ -257,6 +312,8 @@ if __name__ == "__main__":
             else:
                 feature_indices = [int(sys.argv[i]) for i in range(2, len(sys.argv))]
                 run_multivariate_model_on_features(feature_indices)
+        elif sys.argv[1] == "classify_mnist":
+            classify_mnist(float(sys.argv[2]))
         else:
             raise IndexError
     except IndexError:
@@ -275,6 +332,8 @@ if __name__ == "__main__":
         print("- draw_bivariate_decision_boundary [feature_#_1] [feature_#_2] (Display the decision boundary derived from the train data based on the given feature numbersin the bivariate schema)")
         print()
         print("- run_multivariate_model_on_features <all>/< [feature_#_1] [feature_#_2] ... > (Fit a model on data based on all features and report the train and test errors in the multivariate schema)")
+        print()
+        print("- classify_mnist [c] (Fit a model on the MNIST data based on all features and report the train and test errors in the multivariate schema)")
 
     except KeyboardInterrupt:
         print("User interrupted, exiting...")

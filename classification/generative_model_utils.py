@@ -154,8 +154,7 @@ def test_multivariate_model(
         x: np.ndarray,
         y: np.ndarray,
         feature_indices: list,
-        labels: list,
-        features: list) -> float:
+        labels: list) -> float:
     
     k = len(labels) # Labels 1,2,...,k
     nt = len(y) # Number of test points
@@ -171,3 +170,16 @@ def test_multivariate_model(
     error = np.sum(predictions != y) / len(y)
     
     return error
+
+
+def regularise_matrix(
+        sigma: np.ndarray,
+        c: float,
+        k: int,
+        d: int) -> np.ndarray:
+    
+    regulariser = np.array([np.diag(np.array([c for _ in range(d)])) for _ in range(k)])
+
+    sigma += regulariser
+    
+    return sigma
