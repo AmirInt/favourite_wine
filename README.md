@@ -152,3 +152,30 @@ We finally, involve all 13 features to perform the classification and this time 
 Train error using all features: 0.015384615384615385
 
 Test error using all features: 0.041666666666666664
+
+### Extra section: The MNIST data
+
+The MNIST dataset consists of 60000 images of handwritten digits for the train set and an additional 10000 for the test set.
+
+We have also trained the model on the MNIST train dataset and calculated the test error on the test dataset.
+
+In this section, the covariance turned out to be singular, which made it impossible to work with. To resolve singularity we add a diagonal matrix `c.I` to the covariance matrix to regularise it. This trick makes sure that the covariance matrix is non-singular and invertible.
+
+At this point, the scalar term `c` is another parameter of the model that we have to optimise.
+
+Testing the model for different values of `c` resulted in the following:
+
+| c | Test Error |
+|:-:|:----------:|
+|2000|4.37%|
+|3000|4.35%|
+|3500|4.38%|
+|4000|4.31%|
+|4050|4.30%|
+|4100|4.31%|
+|4200|4.33%|
+|5000|4.38%|
+
+Therefore, the value of 4050 was best suiting for the regularising term `c`.
+
+![](./assets/mnist_c_errors.png)
