@@ -19,7 +19,7 @@ The label (y): the winery from which the bottle came (1,2,3)
 
 #### Loading the dataset
 
-We use a shuffle of a dataset from a fixed permutation. Next, we split the dataset into train and test sections including 130 and 48 data entries respectively.
+We use a shuffle of the dataset from a fixed permutation. Next, we split the dataset into train and test sections including 130 and 48 data entries respectively.
 
 #### Creating the model
 
